@@ -1,0 +1,79 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "student-grades-api",
+    "collectionId": "25ff8aa8-e771-46d0-aef1-41ce1da9cffd",
+    "dateExported": "2024-06-06T21:27:56.746Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "a8fdf771-2756-4595-92c2-931b600e6929",
+            "colId": "25ff8aa8-e771-46d0-aef1-41ce1da9cffd",
+            "containerId": "",
+            "name": "Crear estudiante",
+            "url": "http://localhost:3000/students",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-06-06T21:20:37.501Z",
+            "modified": "2024-06-06T21:20:37.501Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Juan Pérez\",\n  \"age\": 20,\n  \"grades\": [\n    {\n      \"semester\": 1,\n      \"grade\": 85\n    },\n    {\n      \"semester\": 2,\n      \"grade\": 90\n    }\n  ]\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "c172170b-63d9-4cdf-b2d7-5c405aaca9c8",
+            "colId": "25ff8aa8-e771-46d0-aef1-41ce1da9cffd",
+            "containerId": "",
+            "name": "Obtener todos los estudiantes",
+            "url": "http://localhost:3000/students",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-06-06T21:21:26.471Z",
+            "modified": "2024-06-06T21:21:26.471Z",
+            "headers": []
+        },
+        {
+            "_id": "8aca204e-06d4-4d67-8aa4-0febeac80467",
+            "colId": "25ff8aa8-e771-46d0-aef1-41ce1da9cffd",
+            "containerId": "",
+            "name": "Actualizar estudiante",
+            "url": "http://localhost:3000/students/666227b6caf86c6a15c84072",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2024-06-06T21:22:45.578Z",
+            "modified": "2024-06-06T21:22:45.578Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Juan Carlos Pérez\",\n  \"grades\": [\n    {\n      \"semester\": 1,\n      \"grade\": 85\n    },\n    {\n      \"semester\": 2,\n      \"grade\": 90\n    },\n    {\n      \"semester\": 3,\n      \"grade\": 95\n    }\n  ]\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a6957570-5114-4134-b2db-980c1a127156",
+            "colId": "25ff8aa8-e771-46d0-aef1-41ce1da9cffd",
+            "containerId": "",
+            "name": "Eliminar estudiante",
+            "url": "http://localhost:3000/students/666227b6caf86c6a15c84072",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-06-06T21:23:24.830Z",
+            "modified": "2024-06-06T21:23:24.830Z",
+            "headers": []
+        }
+    ],
+    "ref": "x49CPb202gQHxTDyafD_oAq67SNLyt3whAu01MdU_ndO0wOsjyamV6eQ4FR7aWAvhKCmuM1i-kSA0j0HVgy51A"
+}
