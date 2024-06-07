@@ -8,49 +8,39 @@ const Formulario = () => {
   const params = useParams();
   const location = useLocation();
 
-  const [op, setOp] = useState(undefined);
-  const [title, setTitle] = useState("Crear Persona");
-  const [object, setObject] = useState({
-    Name: "",
-    cant: "",
-    rating: "",
-    link: "",
-    payment_type: "",
-    credit_card: "",
-    discount: "",
+  const [student, setStudent] = useState({
+    name: "",
+    age: "",
+    grades : [],
   });
 
-  const ejecutar = async (event) => {
-    event.preventDefault();
-
-    if (op === undefined) {
-      create(event);
-    } else {
-      edit(event);
-    }
-  };
-
-  const edit = async (event) => {
+  const edit_student = async (event) => {
     const id = params.id;
 
-    const { Name, cant, rating, link, payment_type, credit_card, discount } =
-      event.target;
-    console.log(nombre.value);
-    const objecto = {
-      Name: nombre.value,
-      cant: cant.value,
-      rating: rating.value,
-      link: link.value,
-      payment_type: tipo_pago.value,
-      credit_card: tarjeta.value,
-      discount: descuento.value,
+    event.preventDefault();
+
+    let _grades = [];
+
+    student.grades.map((grade) => {
+      _grades.push({
+        semester: grade.semester,
+        grade: document.getElementById(`grade-${grade.semester}`).value,
+      });
+    });
+
+    const _student = {
+      name: nombre.value,
+      age: edad.value,
+      grades: _grades,
     };
 
+    console.log(_student);
+
     const peticion = await fetch(
-      `https://api-generator.retool.com/jYYEW7/data/${id}`,
+      `http://localhost:3000/students/${id}`,
       {
-        method: "PUT",
-        body: JSON.stringify(objecto),
+        method: "PATCH",
+        body: JSON.stringify(_student),
         headers: {
           "Content-Type": "application/json",
         },
@@ -64,64 +54,9 @@ const Formulario = () => {
     alert("Error en el servidor");
   };
 
-  const create = async (event) => {
-    const { Name, cant, rating, link, payment_type, credit_card, discount } =
-      event.target;
-    let _id = 1;
-    for (let index = 1; index < 500; index++) {
-      try {
-        const peticion = await fetch(
-          `https://api-generator.retool.com/jYYEW7/data/${index}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (peticion.status === 200) continue;
-        _id = index;
-        break;
-      } catch (error) {
-        _id = index;
-        break;
-      }
-
-    }
-
-    const objeto = {
-      id: _id,
-      Name: nombre.value,
-      cant: cant.value,
-      rating: rating.value,
-      link: link.value,
-      date: "2023-05-05",
-      payment_type: tipo_pago.value,
-      credit_card: tarjeta.value,
-      discount: descuento.value,
-    };
-
+  const buscar_student = async (id) => {
     const peticion = await fetch(
-      "https://api-generator.retool.com/jYYEW7/data",
-      {
-        method: "POST",
-        body: JSON.stringify(objeto),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const ok = await peticion.json();
-
-    if (ok !== undefined) return navigate("/");
-
-    alert("Error en el servidor");
-  };
-
-  const buscar_person = async (id) => {
-    const peticion = await fetch(
-      `https://api-generator.retool.com/jYYEW7/data/${id}`,
+      `http://localhost:3000/students/${id}`,
       {
         method: "GET",
         headers: {
@@ -132,7 +67,7 @@ const Formulario = () => {
     const objeto = await peticion.json();
 
     if (objeto !== undefined) {
-      return setObject(objeto);
+      return setStudent(objeto);
     }
 
     alert("Error buscando buscando a la persona");
@@ -140,184 +75,52 @@ const Formulario = () => {
 
   useEffect(() => {
     const id = params.id;
-
-    if (id) {
-      if (location.pathname.includes("person")) {
-        setOp(true);
-        setTitle("Ver Persona");
-        buscar_person(id);
-      } else {
-        setOp(false);
-        setTitle("Editar Persona");
-        buscar_person(id);
-      }
-    }
+    buscar_student(id);
   }, [params, location]);
 
   return (
     <section className="form-container">
-      <h2>{title}</h2>
-      <form onSubmit={ejecutar}>
+      <h2>Editar estudiante</h2>
+      <form onSubmit={edit_student}>
         <div className="form-group">
           <label htmlFor="nombre">Nombre:</label>
 
-          {op ? (
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              defaultValue={object.Name}
-              required
-              readOnly
-            />
-          ) : (
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              defaultValue={object.Name}
-              required
-            />
-          )}
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            defaultValue={student.name}
+            required
+          />
         </div>
         <div className="form-group">
-          <label htmlFor="cantidad">Cantidad:</label>
-          {op ? (
+          <label htmlFor="cantidad">Edad:</label>
+          <input
+            type="number"
+            id="edad"
+            name="edad"
+            defaultValue={student.age}
+            required
+          />
+        </div>
+        {student.grades.map((grade, index) => (
+          <div className="form-group" key={index}>
+            <label htmlFor={`grade-${grade.semester}`}>Semestre {grade.semester}:</label>
             <input
               type="number"
-              id="cantidad"
-              name="cant"
-              defaultValue={object.cant}
-              required
-              readOnly
-            />
-          ) : (
-            <input
-              type="number"
-              id="cantidad"
-              name="cant"
-              defaultValue={object.cant}
+              id={`grade-${grade.semester}`}
+              name={`grade-${grade.semester}`}
+              defaultValue={grade.grade}
               required
             />
-          )}
-        </div>
-        <div className="form-group">
-          <label htmlFor="rating">Rating:</label>
-          {op ? (
-            <input
-              type="number"
-              id="rating"
-              name="rating"
-              defaultValue={object.rating}
-              required
-              readOnly
-            />
-          ) : (
-            <input
-              type="number"
-              id="rating"
-              name="rating"
-              defaultValue={object.rating}
-              required
-            />
-          )}
-        </div>
-        <div className="form-group">
-          <label htmlFor="link">Link:</label>
-          {op ? (
-            <input
-              type="text"
-              id="link"
-              name="link"
-              defaultValue={object.link}
-              required
-              readOnly
-            />
-          ) : (
-            <input
-              type="text"
-              id="link"
-              name="link"
-              defaultValue={object.link}
-              required
-            />
-          )}
-        </div>
-        <div className="form-">
-          <label htmlFor="tipo_pago">Tipo de Pago:</label>
-          {op ? (
-            <input
-              type="text"
-              id="tipo_pago"
-              name="tipo_pago"
-              defaultValue={object.payment_type}
-              required
-              readOnly
-            />
-          ) : (
-            <input
-              type="text"
-              id="tipo_pago"
-              name="tipo_pago"
-              defaultValue={object.payment_type}
-              required
-            />
-          )}
-        </div>
-        <div className="form-group">
-          <label htmlFor="tarjeta">Tarjeta:</label>
-          {op ? (
-            <input
-              type="text"
-              id="tarjeta"
-              name="tarjeta"
-              defaultValue={object.credit_card}
-              required
-              readOnly
-            />
-          ) : (
-            <input
-              type="text"
-              id="tarjeta"
-              name="tarjeta"
-              defaultValue={object.credit_card}
-              required
-            />
-          )}
-        </div>
-        <div className="form-group">
-          <label htmlFor="descuento">Descuento:</label>
-          {op ? (
-            <input
-              type="number"
-              id="descuento"
-              name="descuento"
-              defaultValue={object.discount}
-              required
-              readOnly
-            />
-          ) : (
-            <input
-              type="number"
-              id="descuento"
-              name="descuento"
-              defaultValue={object.discount}
-              required
-            />
-          )}
-        </div>
+          </div>
+        ))}
         <div className="button-group">
-          {!op && (
-            <button type="submit" className="save-button">
-              Guardar
-            </button>
-          )}
           <button
-            type="button"
+            type="submit"
             className="back-button"
-            onClick={() => navigate("/")}
           >
-            Regresar
+            Editar
           </button>
         </div>
       </form>
